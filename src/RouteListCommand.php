@@ -1,6 +1,6 @@
 <?php
 
-namespace Wise\Dingo\Api\Console\Commands;
+namespace JK\Dingo\Api\Console\Commands;
 
 use Dingo\Api\Routing\Route;
 use Dingo\Api\Routing\RouteCollection;

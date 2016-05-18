@@ -13,7 +13,7 @@ Just register the command inside `$commands` array at `app/Console/Kernel.php` f
 
 ```php
 protected $commands = [
-	Wise\Dingo\Api\Console\Commands\RouteListCommand::class
+	JK\Dingo\Api\Console\Commands\RouteListCommand::class
 ];
 ```
 
