@@ -1,0 +1,24 @@
+{
+    "name": "jakubkratina/lumen-dingo-route-list",
+    "description": "Route:list command support at Lumen framework application with Dingo API framework",
+    "keywords": ["lumen", "dingo", "api", "route", "list", "command"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jakub Kratina",
+            "email": "me@jakubkratina.cz"
+        }
+    ],
+    "support": {
+        "email": "me@jakubkratina.cz",
+        "issues": "https://github.com/jakubkratina/lumen-dingo-route-list/issues"
+    },
+    "require": {
+       "php": ">=5.5.9"
+    },
+    "autoload": {
+      "files": [
+			     "src/RouteListCommand.php"
+		  ]
+    }
+}
