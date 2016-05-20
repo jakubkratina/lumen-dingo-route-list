@@ -87,8 +87,10 @@ class RouteListCommand extends Command
 	{
 		$rows = [];
 
+		$routes = self::alphabetically($collection->getRoutes());
+
 		/** @var Route $route */
-		foreach ($collection->getRoutes() as $route) {
+		foreach ($routes as $route) {
 			array_push($rows, [
 				'method'     => implode(' | ', $route->getMethods()),
 				'uri'        => $route->uri(),
@@ -139,4 +141,18 @@ class RouteListCommand extends Command
 		);
 	}
 
+
+
+	/**
+	 * @param array $routes
+	 * @return array
+	 */
+	private static function alphabetically(array $routes)
+	{
+		usort($routes, function (Route $a, Route $b) {
+			return $a->uri() > $b->uri();
+		});
+
+		return $routes;
+	}
 }
