@@ -6,6 +6,7 @@ use Dingo\Api\Routing\Route;
 use Dingo\Api\Routing\RouteCollection;
 use Dingo\Api\Routing\Router;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 
 
@@ -15,7 +16,7 @@ class RouteListCommand extends Command
 	/**
 	 * @var string
 	 */
-	protected $signature = 'route:list {version=v1}';
+	protected $signature = 'route:list {version?}';
 
 	/**
 	 * @var string
@@ -29,18 +30,17 @@ class RouteListCommand extends Command
 	 */
 	public function fire()
 	{
-		$collection = $this->routeCollection(
-			$this->argument('version')
-		);
+		$version = $this->argument('version');
+
+		$collection = $this->routeCollection($version);
 
 		if ($collection === null) {
 			return 1;
 		}
 
-		$this->table(
-			$this->header(),
-			$this->rows($collection)
-		);
+		$version === null
+			? $this->printAllVersions($collection)
+			: $this->printVersion($collection, $version);
 
 		return 0;
 	}
@@ -49,23 +49,22 @@ class RouteListCommand extends Command
 
 	/**
 	 * @param string $version
-	 * @return RouteCollection|null
+	 * @return array|null
 	 */
 	private function routeCollection($version)
 	{
 		/** @var Router $api */
 		$api = app('api.router');
 
-		/** @var RouteCollection $routeCollection */
 		$collection = $api->getRoutes();
 
-		if (isset($collection[$version]) === false) {
+		if ($version !== null && isset($collection[$version]) === false) {
 			$this->error('Version [' . $version . '] is not defined.');
 
 			return null;
 		}
 
-		return $collection[$version];
+		return $collection;
 	}
 
 
@@ -100,6 +99,44 @@ class RouteListCommand extends Command
 		}
 
 		return $rows;
+	}
+
+
+
+	/**
+	 * @param array $collection
+	 */
+	private function printAllVersions(array $collection)
+	{
+		foreach ($collection as $version => $routes) {
+			$this->table(['Version'], [compact('version')]);
+
+			$this->printTable($routes);
+		}
+	}
+
+
+
+	/**
+	 * @param array $collection
+	 * @param string $version
+	 */
+	private function printVersion(array $collection, $version)
+	{
+		$this->printTable($collection[$version]);
+	}
+
+
+
+	/**
+	 * @param RouteCollection $routes
+	 */
+	private function printTable(RouteCollection $routes)
+	{
+		$this->table(
+			$this->header(),
+			$this->rows($routes)
+		);
 	}
 
 }
