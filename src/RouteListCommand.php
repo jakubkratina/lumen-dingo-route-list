@@ -24,25 +24,34 @@ class RouteListCommand extends Command
 	protected $description = 'List all registered routes';
 
 
+    /**
+     * @return int
+     */
+	public function handle()
+    {
+        $version = $this->argument('version');
+
+        $collection = $this->routeCollection($version);
+
+        if ($collection === null) {
+            return 1;
+        }
+
+        $version === null
+            ? $this->printAllVersions($collection)
+            : $this->printVersion($collection, $version);
+
+        return 0;
+    }
+
 
 	/**
+     * For backward compatibility, before Lumen 5.5 was used fire method instead of handle()
 	 * @return int
 	 */
 	public function fire()
 	{
-		$version = $this->argument('version');
-
-		$collection = $this->routeCollection($version);
-
-		if ($collection === null) {
-			return 1;
-		}
-
-		$version === null
-			? $this->printAllVersions($collection)
-			: $this->printVersion($collection, $version);
-
-		return 0;
+		return $this->handle();
 	}
 
 
