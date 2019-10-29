@@ -100,13 +100,18 @@ class RouteListCommand extends Command
 
 		/** @var Route $route */
 		foreach ($routes as $route) {
-			array_push($rows, [
-				'method'     => implode(' | ', $route->getMethods()),
-				'uri'        => $route->uri(),
-				'name'       => $route->getName(),
-				'action'     => $route->getActionName(),
-				'middleware' => implode(' | ', $route->getMiddleware()),
-			]);
+		    $row = [
+                'method'     => implode(' | ', $route->getMethods()),
+                'uri'        => $route->uri(),
+                'name'       => $route->getName(),
+                'action'     => $route->getActionName(),
+            ];
+
+            $row['middleware'] = method_exists($route, 'getMiddleware')
+                ? implode(' | ', $route->getMiddleware())
+                : 'n/a';
+
+			array_push($rows, $row);
 		}
 
 		return $rows;
